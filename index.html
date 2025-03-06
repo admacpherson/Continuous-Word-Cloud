@@ -14,3 +14,77 @@
     <div id="my_dataviz"></div>
   </body>
 </html>
+
+
+
+<script>
+// List of words
+var myWords = []
+
+// Async function to load CSV then call word cloud instantiation
+async function loadCSV() {
+  // Try/catch for file handling
+  try {
+    const response = await fetch("/Readership Reports/Word List.csv"); //Fetch list of words
+   
+    if (!response.ok) throw new Error("Failed to load CSV"); // Throw error
+
+    const text = await response.text(); // Convert file to plain text
+    myWords = text.split(/\r?\n/); // Split CSV into lines (cross-platform)
+
+    console.log("CSV Loaded:", myWords); // Confirm words were loaded
+    createWordCloud(); // Call function to create word cloud
+    
+  } catch (err) {
+    console.error("Error loading CSV:", err); // Throw error
+  }
+}
+
+loadCSV(); // Call function to load CSV
+
+
+  
+// Wrapper function to create formatted word cloud using D3
+// Based on code from https://d3-graph-gallery.com/graph/wordcloud_basic.html
+function createWordCloud() {
+
+  // Set margins and dimensions
+  var margin = {top: 10, right: 10, bottom: 10, left: 10},
+      width = 450 - margin.left - margin.right,
+      height = 450 - margin.top - margin.bottom;
+
+  // Create SVG object and append to page body
+  var svg = d3.select("#my_dataviz").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+  // Constructs a new cloud layout instance. Rybs an algorithm to find the position of words that suits your requirements
+  var layout = d3.layout.cloud()
+    .size([width, height])
+    .words(myWords.map(function(d) { return {text: d}; }))
+    .padding(5)
+    .fontSize(15)
+    .rotate(function() { return ~~(Math.random() * 2) * 90; })
+    .on("end", draw);
+  layout.start();
+
+  // Draws the words based on above formatting
+  function draw(words) {
+    svg
+      .append("g")
+        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+        .selectAll("text")
+          .data(words)
+        .enter().append("text")
+          .style("font-size", function(d) { return d.size + "px"; })
+          .attr("text-anchor", "middle")
+          .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; });
+  }
+}
+</script>
