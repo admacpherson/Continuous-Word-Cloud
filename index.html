@@ -30,7 +30,9 @@ async function loadCSV() {
     if (!response.ok) throw new Error("Failed to load CSV"); // Throw error
 
     const text = await response.text(); // Convert file to plain text
-    myWords = text.split(/\r?\n/); // Split CSV into lines (cross-platform)
+    myWords = text.split(/\r?\n/) // Split CSV into lines (cross-platform)
+      .map(word => word.trim()) // Trim whitespace from each word
+      .map(word => word.replace(/['"]+/g, '')); // Remove both single and double quotes
 
     console.log("CSV Loaded:", myWords); // Confirm words were loaded
     createWordCloud(); // Call function to create word cloud
