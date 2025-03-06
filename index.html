@@ -11,39 +11,60 @@
     <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
 
     <!-- Create a div where the graph will take place -->
-    <div id="my_dataviz"></div>
+    <div id="wordcloud"></div>
   </body>
 </html>
 
 
 
 <script>
-// List of words
-var myWords = []
+// List of words and categories
+var myWords = [];
 
 // Async function to load CSV then call word cloud instantiation
 async function loadCSV() {
   // Try/catch for file handling
   try {
-    const response = await fetch("/Readership Reports/Word List.csv"); //Fetch list of words
-   
+    const response = await fetch("/Readership Reports/Word List.csv"); // Fetch list of words
+    
     if (!response.ok) throw new Error("Failed to load CSV"); // Throw error
 
     const text = await response.text(); // Convert file to plain text
     myWords = text.split(/\r?\n/) // Split CSV into lines (cross-platform)
-      .map(word => word.trim()) // Trim whitespace from each word
-      .map(word => word.replace(/['"]+/g, '')); // Remove both single and double quotes
+      .map(row => {
+        const [word, category] = row.split(","); // Split row into word and category by comma
+        // Return an object for each word and category
+        return {
+          text: word.trim().replace(/['"]+/g, ''), // Strip quotes from word
+          category: category ? category.trim().replace(/['"]+/g, '') : '' // Strip quotes from category
+        }
+      })
+      .filter(item => item.text); // Filter out any empty lines or invalid entries
 
-    console.log("CSV Loaded:", myWords); // Confirm words were loaded
+    console.log("CSV Loaded:", myWords); // Confirm words and categories were loaded
     createWordCloud(); // Call function to create word cloud
     
   } catch (err) {
-    console.error("Error loading CSV:", err); // Throw error
+    console.error("Error loading CSV:", err); // Handle errors
   }
 }
 
 loadCSV(); // Call function to load CSV
-
+  
+  
+// Function to map categories to colors
+function getColor(category) {
+  const colors = {
+    "North America": "#FF5733",  // Red
+    "Latin America": "#33FF57",  // Green
+    "Europe": "#3357FF",  // Blue
+    "Asia": "#FFFF33",   // Yellow
+    "Africa": "#FFFF33",  // Yellow
+    "AUNZ": "#FFFF33",   // Yellow
+    "Middle East": "#FFFF33"   // Yellow
+  };
+  return colors[category] || "#000000"; // Default to black if category is not found
+}
 
   
 // Wrapper function to create formatted word cloud using D3
@@ -56,7 +77,7 @@ function createWordCloud() {
       height = 450 - margin.top - margin.bottom;
 
   // Create SVG object and append to page body
-  var svg = d3.select("#my_dataviz").append("svg")
+  var svg = d3.select("#wordcloud").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -66,7 +87,7 @@ function createWordCloud() {
   // Constructs a new cloud layout instance. Runs an algorithm to find the position of words that suits your requirements
   var layout = d3.layout.cloud()
     .size([width, height])
-    .words(myWords.map(function(d) { return {text: d}; }))
+    .words(myWords.map(function(d) { return { text: d.text, category: d.category }; }))  // Map to use 'text' for words
     .padding(5)
     //Randomize font size using min/max parameters
     .fontSize(function(){
@@ -91,6 +112,7 @@ function createWordCloud() {
           .data(words)
         .enter().append("text")
           .style("font-size", function(d) { return d.size + "px"; })
+          .style("fill", function(d) { return getColor(d.category); }) // Use category to color the words
           .attr("text-anchor", "middle")
           .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
