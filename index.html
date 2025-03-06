@@ -30,16 +30,20 @@ async function loadCSV() {
     if (!response.ok) throw new Error("Failed to load CSV"); // Throw error
 
     const text = await response.text(); // Convert file to plain text
+    
     myWords = text.split(/\r?\n/) // Split CSV into lines (cross-platform)
       .map(row => {
-        const [word, category] = row.split(","); // Split row into word and category by comma
-        // Return an object for each word and category
-        return {
-          text: word.trim().replace(/['"]+/g, ''), // Strip quotes from word
-          category: category ? category.trim().replace(/['"]+/g, '') : '' // Strip quotes from category
-        }
+        // Regex to split only commas **outside** quotes (allows for City, Country)
+        const matches = row.match(/(?:[^",]+|"[^"]*")+/g);
+        // Split row into word and category by comma
+        const word = matches ? matches[0].trim().replace(/['"]+/g, '') : ''; // First column (Word)
+        const category = matches && matches[1] ? matches[1].trim().replace(/['"]+/g, '') : ''; // Second column (Category)
+
+        // Return the object if word exists
+        return { text: word, category: category };
       })
-      .filter(item => item.text); // Filter out any empty lines or invalid entries
+      .filter(item => item.text); // Remove empty entries
+
 
     console.log("CSV Loaded:", myWords); // Confirm words and categories were loaded
     createWordCloud(); // Call function to create word cloud
