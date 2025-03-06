@@ -63,13 +63,17 @@ function createWordCloud() {
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-  // Constructs a new cloud layout instance. Rybs an algorithm to find the position of words that suits your requirements
+  // Constructs a new cloud layout instance. Runs an algorithm to find the position of words that suits your requirements
   var layout = d3.layout.cloud()
     .size([width, height])
     .words(myWords.map(function(d) { return {text: d}; }))
     .padding(5)
     .fontSize(15)
-    .rotate(function() { return ~~(Math.random() * 2) * 90; })
+    //Rotate words at a random allowed angle
+    .rotate(function() { 
+      const angles = [0, 0, 90, -90];  // Possible angles
+      return angles[Math.floor(Math.random() * angles.length)];  // Randomly select one angle
+    })
     .on("end", draw);
   layout.start();
 
