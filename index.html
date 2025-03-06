@@ -68,7 +68,12 @@ function createWordCloud() {
     .size([width, height])
     .words(myWords.map(function(d) { return {text: d}; }))
     .padding(5)
-    .fontSize(15)
+    //Randomize font size using min/max parameters
+    .fontSize(function(){
+      const min = 10
+      const max = 30
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    })
     //Rotate words at a random allowed angle
     .rotate(function() { 
       const angles = [0, 0, 90, -90];  // Possible angles
