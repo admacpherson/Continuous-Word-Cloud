@@ -1,7 +1,7 @@
 ﻿Vancouver,North America
 Seattle,North America
 Portland,North America
-Eugene,North America
+"Eugene, OR",North America
 Santa Rosa,North America
 San Francisco,North America
 Berkeley,North America
@@ -10,28 +10,28 @@ San Jose,North America
 Santa Clara,North America
 Westlake Village,North America
 Los Angeles,North America
-Pasadena,North America
-Irvine,North America
+"Pasadena, CA",North America
+"Irvine, CA",North America
 Rancho Santa Margarita,North America
-Ramona,North America
+"Ramona, CA",North America
 San Diego,North America
-Tempe,North America
+"Tempe, AZ",North America
 Las Vegas,North America
 Denver,North America
 Santa Fe,North America
-Littleton,North America
+"Littleton, CO",North America
 Las Cruces,North America
 Austin,North America
 Houston,North America
 Dallas,North America
 Baton Rouge,North America
-Mobile,North America
-Montgomery,North America
+"Mobile, AL",North America
+"Montgomery, AL",North America
 Gainesville,North America
 Miami,North America
 Fort Lauderdale,North America
 "Council Bluffs, IA",North America
-Dubuque,North America
+"Dubuque, IA",North America
 "Batavia, IL",North America
 Chicago,North America
 Grand Rapids,North America
@@ -55,6 +55,7 @@ Philadelphia,North America
 "Reading, PA",North America
 Brooklyn,North America
 New York,North America
+NYC,North America
 "Allentown, PA",North America
 "Bridgeport, CT",North America
 Providence,North America
