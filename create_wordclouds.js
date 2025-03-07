@@ -4,36 +4,51 @@ import { cloudContainers } from './cleanup_clouds.js';
 
 let xOffset = 0;  // Track horizontal offset (x-axis)
 const gapBetweenClouds = 500;  // Gap between clouds
-const maxClouds = 5;  // Limit the number of visible clouds at a time
+const maxClouds = 3;  // Limit the number of visible clouds at a time
 
 
 // Wrapper function to create formatted word cloud using D3
 // Based on code from https://d3-graph-gallery.com/graph/wordcloud_basic.html
 function createWordCloud(words) {
-  const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-  const containerWidth = document.getElementById('wordcloud').offsetWidth;  // Get container width here
+  // Set margins
+  const margin = { top: 10, right: 67, bottom: 10, left: 67 };
+  // Get container width
+  const containerWidth = document.getElementById('wordcloud').offsetWidth;
+  
+  //Set height and width
   const width = 450 - margin.left - margin.right;
   const height = 450 - margin.top - margin.bottom;
 
+  // Create div wrapper
   const cloudContainer = document.createElement('div');
   cloudContainer.className = 'cloud-container';
   document.getElementById('wordcloud').appendChild(cloudContainer);
 
+  // Create svg element
   const svg = d3.select(cloudContainer).append("svg")
+    // Set height and width
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    // Create a group within the svg element
     .append("g")
+    // Add margin to the group members
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
+  // Instantiate D3 layout
   const layout = d3.layout.cloud()
+    // Set size to height and width properties
     .size([width, height])
+    // Define words in the wordcloud and their categories
     .words(words.map(d => ({ text: d.text, category: d.category })))
+    // Add padding
     .padding(5)
+    // Randomize font size between min and max
     .fontSize(function() {
       const min = 10;
       const max = 30;
       return Math.floor(Math.random() * (max - min + 1)) + min;
     })
+    // Randomly rotate at right angles
     .rotate(function() {
       const angles = [0, 0, 90, -90];
       return angles[Math.floor(Math.random() * angles.length)];
