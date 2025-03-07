@@ -1,6 +1,6 @@
 async function init() {
-  const words = await loadCSV(); // Waits for data
-  createWordCloud(words);        // Creates word cloud after data arrives
+  const words = await loadCSV();  // Waits for data
+  startScrollingClouds(words, 5);  // Start scrolling clouds after data arrives
 }
 
 // Async function to load CSV then call word cloud instantiation
@@ -60,9 +60,15 @@ function createWordCloud(words) {
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
       width = 450 - margin.left - margin.right,
       height = 450 - margin.top - margin.bottom;
+  
+  // Create a new div container for the word cloud (cloud-container)
+  const cloudContainer = document.createElement('div');
+  cloudContainer.className = 'cloud-container';  // Add the animation class for scrolling
+  document.getElementById('wordcloud').appendChild(cloudContainer);  // Append the container to the page
+
 
   // Create SVG object and append to page body
-  var svg = d3.select("#wordcloud").append("svg")
+  var svg = d3.select(cloudContainer).append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -72,7 +78,7 @@ function createWordCloud(words) {
   // Constructs a new cloud layout instance. Runs an algorithm to find the position of words that suits your requirements
   var layout = d3.layout.cloud()
     .size([width, height])
-    .words(words.map(function(d) { return { text: d.text, category: d.category }; }))  // Map to use 'text' for words
+    .words(words.map(d => ({ text: d.text, category: d.category })))
     .padding(5)
     //Randomize font size using min/max parameters
     .fontSize(function(){
@@ -87,23 +93,28 @@ function createWordCloud(words) {
     })
     .on("end", draw);
   layout.start();
-
-  // Draws the words based on above formatting
+  
+  // Draws the words based on the layout
   function draw(words) {
-    svg
-      .append("g")
-        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-        .selectAll("text")
-          .data(words)
-        .enter().append("text")
-          .style("font-size", function(d) { return d.size + "px"; })
-          .style("fill", function(d) { return getColor(d.category); }) // Use category to color the words
-          .attr("text-anchor", "middle")
-          .attr("transform", function(d) {
+    svg.append("g")
+      .attr("transform", `translate(${layout.size()[0] / 2},${layout.size()[1] / 2})`)
+      .selectAll("text")
+      .data(words)
+      .enter().append("text")
+      .style("font-size", d => `${d.size}px`)
+      .style("fill", d => getColor(d.category)) // Color based on category
+      .attr("text-anchor", "middle")
+      .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-          })
-          .text(function(d) { return d.text; });
+      })
+      .text(d => d.text);
   }
+}
+
+function startScrollingClouds(words, speed) {
+  setInterval(() => {
+    createWordCloud(words);  // Generate a new word cloud every interval
+  }, speed * 1000); // Speed in seconds (time between new word clouds)
 }
 
 

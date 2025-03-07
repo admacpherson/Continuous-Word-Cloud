@@ -8,11 +8,39 @@
     <!-- Load d3-cloud -->
     <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
     
-    <!--Load wordcloud program-->
-    <script src="wordclouds.js"></script>
+    <style>
+      #wordcloud {
+        position: relative;
+        width: 100%;
+        height: 450px;
+        overflow: hidden;
+      }
+
+      /* Add a CSS class to animate word clouds scrolling left */
+      .cloud-container {
+        position: absolute;
+        top: 0;
+        animation: scroll-left 15s linear infinite;
+      }
+
+      @keyframes scroll-left {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+    </style>
+
   </head>
   <body>
     <!-- Create a div where the graph will take place -->
     <div id="wordcloud"></div>
+    
+    <!-- Load wordcloud program -->
+    <script src="wordclouds.js"></script>
+    
   </body>
+  
 </html>
