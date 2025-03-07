@@ -22,7 +22,7 @@ async function loadCSV() {
       .filter(item => item.text); // Remove empty entries
 
 
-    console.log("CSV Loaded:", words); // Confirm words and categories were loaded
+    console.log("CSV Loaded"); // Confirm words and categories were loaded
     return words;
     
   } catch (err) {
@@ -31,4 +31,5 @@ async function loadCSV() {
   }
 }
 
+//Export module
 export { loadCSV };
