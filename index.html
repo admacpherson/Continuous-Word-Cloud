@@ -59,13 +59,13 @@ loadCSV(); // Call function to load CSV
 // Function to map categories to colors
 function getColor(category) {
   const colors = {
-    "North America": "#FF5733",  // Red
-    "Latin America": "#33FF57",  // Green
-    "Europe": "#3357FF",  // Blue
-    "Asia": "#FFFF33",   // Yellow
-    "Africa": "#FFFF33",  // Yellow
-    "AUNZ": "#FFFF33",   // Yellow
-    "Middle East": "#FFFF33"   // Yellow
+    "North America": "#008631",   // Dark green
+    "Latin America": "#1FD655",   // Light green
+    "Europe": "#004494",          // Blue
+    "Asia": "#D2042D",            // Red
+    "Africa": "#F8AE21",          // Orange
+    "AUNZ": "##CC33FF",           // Purple
+    "Middle East": "#FFCCCC"      // Light pink
   };
   return colors[category] || "#000000"; // Default to black if category is not found
 }
