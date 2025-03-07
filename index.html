@@ -18,8 +18,10 @@
 
 
 <script>
-// List of words and categories
-var myWords = [];
+async function init() {
+  const words = await loadCSV(); // Waits for data
+  createWordCloud(words);        // Creates word cloud after data arrives
+}
 
 // Async function to load CSV then call word cloud instantiation
 async function loadCSV() {
@@ -31,7 +33,7 @@ async function loadCSV() {
 
     const text = await response.text(); // Convert file to plain text
     
-    myWords = text.split(/\r?\n/) // Split CSV into lines (cross-platform)
+    const words = text.split(/\r?\n/) // Split CSV into lines (cross-platform)
       .map(row => {
         // Regex to split only commas **outside** quotes (allows for City, Country)
         const matches = row.match(/(?:[^",]+|"[^"]*")+/g);
@@ -39,21 +41,20 @@ async function loadCSV() {
         const word = matches ? matches[0].trim().replace(/['"]+/g, '') : ''; // First column (Word)
         const category = matches && matches[1] ? matches[1].trim().replace(/['"]+/g, '') : ''; // Second column (Category)
 
-        // Return the object if word exists
-        return { text: word, category: category };
+        // Return only valid rows
+        return word ? { text: word, category: category } : null;
       })
       .filter(item => item.text); // Remove empty entries
 
 
-    console.log("CSV Loaded:", myWords); // Confirm words and categories were loaded
-    createWordCloud(); // Call function to create word cloud
+    console.log("CSV Loaded:", words); // Confirm words and categories were loaded
+    return words;
     
   } catch (err) {
     console.error("Error loading CSV:", err); // Handle errors
+    return ["Error"]; //Return a self-explanatory array to prevent runtime error
   }
 }
-
-loadCSV(); // Call function to load CSV
   
   
 // Function to map categories to colors
@@ -64,7 +65,7 @@ function getColor(category) {
     "Europe": "#004494",          // Blue
     "Asia": "#D2042D",            // Red
     "Africa": "#F8AE21",          // Orange
-    "AUNZ": "##CC33FF",           // Purple
+    "AUNZ": "#CC33FF",           // Purple
     "Middle East": "#FFCCCC"      // Light pink
   };
   return colors[category] || "#000000"; // Default to black if category is not found
@@ -73,7 +74,7 @@ function getColor(category) {
   
 // Wrapper function to create formatted word cloud using D3
 // Based on code from https://d3-graph-gallery.com/graph/wordcloud_basic.html
-function createWordCloud() {
+function createWordCloud(words) {
 
   // Set margins and dimensions
   var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -91,7 +92,7 @@ function createWordCloud() {
   // Constructs a new cloud layout instance. Runs an algorithm to find the position of words that suits your requirements
   var layout = d3.layout.cloud()
     .size([width, height])
-    .words(myWords.map(function(d) { return { text: d.text, category: d.category }; }))  // Map to use 'text' for words
+    .words(words.map(function(d) { return { text: d.text, category: d.category }; }))  // Map to use 'text' for words
     .padding(5)
     //Randomize font size using min/max parameters
     .fontSize(function(){
@@ -124,4 +125,6 @@ function createWordCloud() {
           .text(function(d) { return d.text; });
   }
 }
+  
+init()
 </script>
