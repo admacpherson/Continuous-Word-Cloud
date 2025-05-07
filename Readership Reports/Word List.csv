@@ -365,7 +365,6 @@ Romania,Europe
 Bangladesh,Africa
 Chile,Latin America
 Spain,Europe
-Singapore,Asia
 Colombia,Latin America
 Poland,Europe
 Bulgaria,Europe
@@ -387,7 +386,6 @@ Serbia,Europe
 Taiwan,Asia
 Bolivia,Latin America
 Egypt,Africa
-Hong Kong,Asia
 Iraq,Middle East
 Japan,Asia
 Malta,Europe
@@ -456,3 +454,26 @@ BytePlus,Asia
 Cape Town,Africa
 University of Stellenbosch,Africa
 Taipei,Asia
+"Livonia, MI",North America
+Ford Motor Company,North America
+"Cheektowaga, NY",North America
+"Rochester, NY",North America
+"Springfield, MA",North America
+Brookhaven National Laboratory,North America
+"Lindenhurst, NY",North America
+"Lebanon, PA",North America
+"McKinney, TX",North America
+"Royston, England",Europe
+CESI,Europe
+"Almaty, Kazakhstan",Asia
+Dusseldorf,Europe
+"Hildesheim, Germany",Europe
+Nice,Europe
+"Tunis, Tunisia",Africa
+TikTok,Asia
+Beijing,Asia
+"Caxias do Sul, Brazil",Latin America
+"Brasilandia, Brazil",Latin America
+Ellite Internet Ltda,Latin America
+Rio de Janiero,Latin America
+"Inhoaiba, Brazil",Latin America
