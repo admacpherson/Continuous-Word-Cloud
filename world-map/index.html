@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>World Map Word Clouds</title>
+  <style>
+    #map-container {
+      position: relative;
+      width: 1200px;  /* adjust map size */
+      margin: auto;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+    }
+    canvas.wordcloud {
+      position: absolute;
+      pointer-events: none; /* allows hovering on SVG paths */
+    }
+  </style>
+
+</head>
+<body>
+    
+    <div id="map-container">
+      <object id="world-map" type="image/svg+xml" data="continentsRegions.svg" width="100%" height="800px"></object>
+    </div>
+
+    <!-- Load WordCloud2.js -->
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud2.js" defer></script>
+    <!-- Load main.js -->
+    <script src="main.js" defer></script>
+
+</body>
+</html>
